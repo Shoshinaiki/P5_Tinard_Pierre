@@ -27,4 +27,4 @@ fetch("http://localhost:3000/api/products")
     document.getElementById("items").innerHTML = htmlProduct;
 
   })
-console.log ("test")
+console.log ("test2")
