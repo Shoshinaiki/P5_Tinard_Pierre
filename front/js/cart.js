@@ -21,7 +21,7 @@ async function displayProduct(panier){
     articleNode.setAttribute("data-color", product.color); // attribut  
     
 
-    const divImgNode = document.createElement("divImg"); // création div
+    const divImgNode = document.createElement("div"); // création div
     divImgNode.classList.add("cart__item__img"); // attribut img
     articleNode.appendChild(divImgNode)
 
@@ -30,28 +30,41 @@ async function displayProduct(panier){
     imgNode.setAttribute("alt", product.info.altTxt); // attribut alt
     divImgNode.appendChild(imgNode)
 
-    const divItemContentNode = document.createElement("divContent");
+    const divItemContentNode = document.createElement("div");
     divItemContentNode.classList.add("cart__item__content");
+    articleNode.appendChild(divItemContentNode)
     
-    const divItemContentDescriptionNode = document.createElement("divDescription");
+    const divItemContentDescriptionNode = document.createElement("div");
     divItemContentDescriptionNode.classList.add("cart__item__content__description");
-    divItemContentDescriptionNode.setAttribute("Nom du produit").innerText = product.name;
-    divItemContentDescriptionNode.setAttribute("Vert", product.color);
-    divItemContentDescriptionNode.appendChild(divItemContentNode)
+    divItemContentNode.appendChild(divItemContentDescriptionNode)
+    const divItemContentDescriptionh2Node = document.createElement("h2");
+    divItemContentDescriptionh2Node.innerText = product.info.name;
+    divItemContentDescriptionNode.appendChild(divItemContentDescriptionh2Node);
+    const divItemContentDescriptionpNode = document.createElement("p");
+    divItemContentDescriptionpNode.innerText = product.color;
+    divItemContentNode.appendChild(divItemContentDescriptionpNode);
+   
 
-    const divItemContentsettingsNode = document.createElement("divSettings");
-    divItemContentsettingsNode.classList.add("cart__item__content__settings");
-
-    const divItemContentQuantityNode = document.createElement("divQuantity");
+    const divItemContentSettingsNode = document.createElement("div");
+    divItemContentNode.classList.add("cart__item__content__settings");
+    const divItemContentQuantityNode = document.createElement("div");
     divItemContentQuantityNode.classList.add("cart__item__content__quantity");
-    divItemContentQuantityNode.setAttribute("Qté : ", product.quantity);
-    divItemContentQuantityNode.setAttribute("number", inputType, product.info);
-    divItemContentSettingsNode.appendChild(divItemContentQuantityNode)
+    const divItemContentQuantityPNode = document.createElement("p");
+    divItemContentQuantityPNode.innerText = `Qté : ${product.quantity}`;
+    divItemContentSettingsNode.appendChild(divItemContentQuantityPNode)
 
-    const divItemContentSettingsDelete = document.createElement("divDelete");
+    const inputItemContentQuantityNode = document.createElement("input");
+    inputItemContentQuantityNode.classList.add("itemQuantity");
+    inputItemContentQuantityNode.innerText = `name: ${product.info}`;
+    inputItemContentQuantityNode.innerText = `min="1" max="100" value="42": ${product.info}`;
+    divItemContentSettingsNode.appendChild(inputItemContentQuantityNode)
+
+    const divItemContentSettingsDeleteNode = document.createElement("div");
     divItemContentSettingsDeleteNode.classList.add("cart__item__content__settings__delete");
+    const divItemContentSettingsDeletepNode = document.createElement("p");
     divItemContentSettingsDeleteNode.setAttribute("deleteItem", product.info);
-    divItemContentsettingsNode.appendChild(divItemContentSettingsDeleteNode)
+    divItemContentSettingsDeletepNode.innerText = `Supprimer: $(product.info)`;
+    divItemContentSettingsNode.appendChild(divItemContentSettingsDeleteNode)
      
     parentNode.appendChild(articleNode)
 
