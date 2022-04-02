@@ -21,50 +21,53 @@ async function displayProduct(panier){
     articleNode.setAttribute("data-color", product.color); // attribut  
     
 
-    const divImgNode = document.createElement("div"); // création div
-    divImgNode.classList.add("cart__item__img"); // attribut img
-    articleNode.appendChild(divImgNode)
+    const divImg = document.createElement("div"); // création div
+    divImg.classList.add("cart__item__img"); // attribut img
+    articleNode.appendChild(divImg)
 
-    const imgNode = document.createElement("img"); // création img
-    imgNode.setAttribute("src", product.info.imageUrl); // attribut src
-    imgNode.setAttribute("alt", product.info.altTxt); // attribut alt
-    divImgNode.appendChild(imgNode)
+    const img = document.createElement("img"); // création img
+    img.setAttribute("src", product.info.imageUrl); // attribut src
+    img.setAttribute("alt", product.info.altTxt); // attribut alt
+    divImg.appendChild(img)
 
-    const divItemContentNode = document.createElement("div");
-    divItemContentNode.classList.add("cart__item__content");
-    articleNode.appendChild(divItemContentNode)
+    const divContent = document.createElement("div");
+    divContent.classList.add("cart__item__content");
+    articleNode.appendChild(divContent)
     
-    const divItemContentDescriptionNode = document.createElement("div");
-    divItemContentDescriptionNode.classList.add("cart__item__content__description");
-    divItemContentNode.appendChild(divItemContentDescriptionNode)
-    const divItemContentDescriptionh2Node = document.createElement("h2");
-    divItemContentDescriptionh2Node.innerText = product.info.name;
-    divItemContentDescriptionNode.appendChild(divItemContentDescriptionh2Node);
-    const divItemContentDescriptionpNode = document.createElement("p");
-    divItemContentDescriptionpNode.innerText = product.color;
-    divItemContentNode.appendChild(divItemContentDescriptionpNode);
+    const divDescription = document.createElement("div");
+    divDescription.classList.add("cart__item__content__description");
+    const h2 = document.createElement("h2");
+    h2.innerText = product.info.name;
+    divDescription.appendChild(h2)
+    const descriptionp = document.createElement("p");
+    descriptionp.innerText = product.color;
+    divDescription.appendChild(descriptionp)
+    divContent.appendChild(divDescription);
    
 
-    const divItemContentSettingsNode = document.createElement("div");
-    divItemContentNode.classList.add("cart__item__content__settings");
-    const divItemContentQuantityNode = document.createElement("div");
-    divItemContentQuantityNode.classList.add("cart__item__content__quantity");
-    const divItemContentQuantityPNode = document.createElement("p");
-    divItemContentQuantityPNode.innerText = `Qté : ${product.quantity}`;
-    divItemContentSettingsNode.appendChild(divItemContentQuantityPNode)
+    const divSettings = document.createElement("div");
+    divSettings.classList.add("cart__item__content__settings");
+    const divQuantity = document.createElement("div");
+    divQuantity.classList.add("cart__item__content__quantity");
+    divSettings.appendChild(divQuantity)
+    const quantityp = document.createElement("p");
+    divQuantity.innerText = `Qté : ${product.quantity}`;
+    divQuantity.appendChild(quantityp)
+    const inputQuantity = document.createElement("input");
+    inputQuantity.classList.add("itemQuantity");
+    inputQuantity.innerText = `name: ${product.info.altTxt}`;
+    inputQuantity.innerText = `min="1" max="100" value="42": ${product.info.altTxt}`;
+    divQuantity.appendChild(inputQuantity)
+    divDescription.appendChild(divSettings)
 
-    const inputItemContentQuantityNode = document.createElement("input");
-    inputItemContentQuantityNode.classList.add("itemQuantity");
-    inputItemContentQuantityNode.innerText = `name: ${product.info}`;
-    inputItemContentQuantityNode.innerText = `min="1" max="100" value="42": ${product.info}`;
-    divItemContentSettingsNode.appendChild(inputItemContentQuantityNode)
+    const divDelete = document.createElement("div");
+    divDelete.classList.add("cart__item__content__settings__delete");
+    const deletep = document.createElement("p");
+    divDelete.appendChild(deletep)
+    divDelete.setAttribute("deleteItem", product.info.altTxt);
+    divDelete.innerText = `Supprimer: ${product.info.altTxt}`;
+    divSettings.appendChild(divDelete)
 
-    const divItemContentSettingsDeleteNode = document.createElement("div");
-    divItemContentSettingsDeleteNode.classList.add("cart__item__content__settings__delete");
-    const divItemContentSettingsDeletepNode = document.createElement("p");
-    divItemContentSettingsDeleteNode.setAttribute("deleteItem", product.info);
-    divItemContentSettingsDeletepNode.innerText = `Supprimer: $(product.info)`;
-    divItemContentSettingsNode.appendChild(divItemContentSettingsDeleteNode)
      
     parentNode.appendChild(articleNode)
 
@@ -72,9 +75,22 @@ async function displayProduct(panier){
   }
 }
 
+async function displayQuantityAndPrice(panier) {
+  let prix = 0;
+  let quantity = 0;
+  for (produit of panier) {
+    produit.info = await fetchApi(produit.id);
+    prix += parseInt(produit.info.price);
+    quantity += parseInt(produit.quantity);
+  }
+  document.getElementById("totalQuantity").innerText = quantity;
+  document.getElementById("totalPrice").innerText = prix;
+}
+
 async function main(){
   let panier = JSON.parse(localStorage.getItem("cart"));
   displayProduct(panier);
+  displayQuantityAndPrice(panier);
 }
 
 main();
