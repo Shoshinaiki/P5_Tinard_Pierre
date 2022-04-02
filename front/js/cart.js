@@ -48,25 +48,28 @@ async function displayProduct(panier){
     const divSettings = document.createElement("div");
     divSettings.classList.add("cart__item__content__settings");
     const divQuantity = document.createElement("div");
-    divQuantity.classList.add("cart__item__content__quantity");
+    divQuantity.classList.add("cart__item__content__settings__quantity");
     divSettings.appendChild(divQuantity)
     const quantityp = document.createElement("p");
-    divQuantity.innerText = `Qté : ${product.quantity}`;
+    quantityp.innerText = `Qté :`;
     divQuantity.appendChild(quantityp)
     const inputQuantity = document.createElement("input");
     inputQuantity.classList.add("itemQuantity");
-    inputQuantity.innerText = `name: ${product.info.altTxt}`;
-    inputQuantity.innerText = `min="1" max="100" value="42": ${product.info.altTxt}`;
+    inputQuantity.setAttribute("min", 1);
+    inputQuantity.setAttribute("max", 100);
+    inputQuantity.setAttribute("value", product.quantity);
+    inputQuantity.setAttribute("type", "number");
+    inputQuantity.setAttribute("name", "itemQuantity");
     divQuantity.appendChild(inputQuantity)
-    divDescription.appendChild(divSettings)
+    divContent.appendChild(divSettings)
 
     const divDelete = document.createElement("div");
     divDelete.classList.add("cart__item__content__settings__delete");
-    const deletep = document.createElement("p");
-    divDelete.appendChild(deletep)
-    divDelete.setAttribute("deleteItem", product.info.altTxt);
-    divDelete.innerText = `Supprimer: ${product.info.altTxt}`;
     divSettings.appendChild(divDelete)
+    const deletep = document.createElement("p");
+    deletep.classList.add("deleteItem")
+    deletep.innerText = `Supprimer`;
+    divDelete.appendChild(deletep)
 
      
     parentNode.appendChild(articleNode)
@@ -87,10 +90,22 @@ async function displayQuantityAndPrice(panier) {
   document.getElementById("totalPrice").innerText = prix;
 }
 
+function listenDelete() {
+  let deleteArray = document.querySelectorAll("button.deleteItem");
+  deleteArray.forEach( (e) => {
+    e.addEventListener("click", () => {
+      
+    })
+  })
+}
+
+
+
 async function main(){
   let panier = JSON.parse(localStorage.getItem("cart"));
   displayProduct(panier);
   displayQuantityAndPrice(panier);
+  listenDelete();
 }
 
 main();
