@@ -72,13 +72,11 @@ async function displayProduct(panier){
     divDelete.appendChild(deletep)
 
      
-    parentNode.appendChild(articleNode)
-
-    
+    parentNode.appendChild(articleNode)  
   }
 }
 
-async function displayQuantityAndPrice(panier) {
+function displayQuantityAndPrice(panier) {
   let prix = 0;
   let quantity = 0;
   for (produit of panier) {
@@ -91,21 +89,24 @@ async function displayQuantityAndPrice(panier) {
 }
 
 function listenDelete() {
-  let deleteArray = document.querySelectorAll("button.deleteItem");
-  deleteArray.forEach( (e) => {
-    e.addEventListener("click", () => {
-      
-    })
-  })
-}
+  let deleteArray = document.querySelectorAll("deleteItem > p");
+  deleteArray.forEach( function(elm)  { /* vérifier les éléments au click du bouton */
+    elm.addEventListener("click", function ()  {
+      let panier = JSON.parse(localStorage.getItem("cart"))
+      let articleId = elm.closest("article").getAttribute("data-id");
+      let articleColor = elm.closest("article").getAttribute("data-color");
+      let index =panier.findIndex(cart => cart.id === articleId && cart.color === articleColor)
+      panier.splice(index,1)
+      localStorage.setItem("cart",JSON.stringify(panier))
+      displayProduct(panier)
+      displayQuantityAndPrice(panier)
+} ) } ) } 
 
-
-
-async function main(){
+function main(){
   let panier = JSON.parse(localStorage.getItem("cart"));
   displayProduct(panier);
   displayQuantityAndPrice(panier);
   listenDelete();
 }
 
-main();
+main() 
