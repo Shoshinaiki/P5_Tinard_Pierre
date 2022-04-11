@@ -71,11 +71,11 @@ async function displayProduct(panier){
     deletep.innerText = `Supprimer`;
     divDelete.appendChild(deletep)
 
-     
     parentNode.appendChild(articleNode)  
   }
   listenDelete();
   listenQuantity();
+  listenOrder();
 }
 
 async function displayQuantityAndPrice(panier) {
@@ -83,7 +83,7 @@ async function displayQuantityAndPrice(panier) {
   let quantity = 0;
   for (produit of panier) {
     produit.info = await fetchApi(produit.id);
-    prix += parseInt(produit.info.price);
+    prix += parseInt(produit.info.price) * parseInt(produit.quantity);
     quantity += parseInt(produit.quantity);
   }
   document.getElementById("totalQuantity").innerText = quantity;
@@ -117,13 +117,22 @@ function listenQuantity() {
       displayQuantityAndPrice(panier)
 } ) } ) } 
 
+function listenOrder() {
+  let order = document.getElementById("order");
+  order.addEventListener("click", function(event){
+    event.preventDefault()
+    let firstName = document.createElement("firstName");
+
+
+  } )
+}
+
+
 
 function main(){
   let panier = JSON.parse(localStorage.getItem("cart"));
   displayProduct(panier);
   displayQuantityAndPrice(panier);
-  listenDelete();
-  listenQuantity();
 }
 
 main() 
