@@ -1,4 +1,4 @@
-async function fetchApi(id){
+async function fetchApi(id){ /* fonction d'appel des id produits */
   return fetch(`http://localhost:3000/api/products/${id}`)
   .then(function(res){
       if(res.ok){
@@ -10,7 +10,7 @@ async function fetchApi(id){
   })
 }
 
-async function displayProduct(panier){
+async function displayProduct(panier){ /* fonction de création des éléments du panier */
   for (product of panier) {
     product.info = await fetchApi(product.id); 
     const parentNode = document.getElementById("cart__items"); // création du noeud parent
@@ -78,7 +78,7 @@ async function displayProduct(panier){
   listenOrder();
 }
 
-async function displayQuantityAndPrice(panier) {
+async function displayQuantityAndPrice(panier) { /* fonction écoute de quantitée et de prix */
   let prix = 0;
   let quantity = 0;
   for (produit of panier) {
@@ -90,7 +90,7 @@ async function displayQuantityAndPrice(panier) {
   document.getElementById("totalPrice").innerText = prix;
 }
 
-function listenDelete() {
+function listenDelete() { /* fonction écoute de suppression d'article */
   let deleteArray = document.querySelectorAll("p.deleteItem");
   deleteArray.forEach( function(elm)  { /* vérifier les éléments au click du bouton */
     elm.addEventListener("click", function ()  {
@@ -104,7 +104,7 @@ function listenDelete() {
       displayQuantityAndPrice(panier)
 } ) } ) } 
 
-function listenQuantity() {
+function listenQuantity() { /* fonction écoute de quantitée */
   let quantityArray = document.querySelectorAll("input.itemQuantity");
   quantityArray.forEach( function(elm)  { /* vérifier les éléments au click du bouton */
     elm.addEventListener("input", function (e)  {
@@ -117,13 +117,49 @@ function listenQuantity() {
       displayQuantityAndPrice(panier)
 } ) } ) } 
 
-function listenOrder() {
+function listenOrder() { /* fonction écoute de commande */
   let order = document.getElementById("order");
   order.addEventListener("click", function(event){
     event.preventDefault()
-    let firstName = document.createElement("firstName");
+    const contact = { 
+      
+    firstName : document.getElementById("firstName").value,
+    lastName : document.getElementById("lastName").value,
+    address : document.getElementById("address").value,
+    city : document.getElementById("city").value,
+    email : document.getElementById("email").value,
+    
+  }
+  let panier = JSON.parse(localStorage.getItem("cart")); 
+  let produit = [];
+  for(product of panier) {
+    produit.push(product.id)
+  }
+  const order = {
+    contact : contact, 
+    products : produit
+  }
+   console.log(order);
+   const options = {
+    method: "POST",
+    body: JSON.stringify(order),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  };
+  fetch("http://localhost:3000/api/products/order", options) // Envoie de la requête
+    .then((res) => res.json())
+    .then(function (data) {
+      console.log(data.orderId);
+    })
+    .catch(function (err) {
+      alert(
+        "Il y a eu un problème avec l'opération fetch: " + err.message
+      );
+    });
 
-
+    
   } )
 }
 
