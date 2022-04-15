@@ -76,7 +76,6 @@ async function displayProduct(panier) {
   listenDelete();
   listenQuantity();
   listenOrder();
-  transfertNumberOrder();
 }
 
 async function displayQuantityAndPrice(panier) {
@@ -162,14 +161,14 @@ function listenOrder() {
       method: "POST",
       body: JSON.stringify(order),
       headers: {
-        Accept: "application/json",
+        "Accept": "application/json",
         "Content-Type": "application/json",
       },
     };
     fetch("http://localhost:3000/api/products/order", options) // Envoie de la requête
       .then(function (res) {
-        return res.json;
-        console.log(orderld);
+        console.log(orderId);
+        return res.json(); 
       })
       .then(function(resData) {
         window.location.href = "../html/confirmation.html?orderId=" + resData.orderId;
@@ -178,14 +177,8 @@ function listenOrder() {
         alert("Il y a eu un problème avec l'opération fetch: " + err.message);
       });
   } ) 
-}
+} 
     
-/* Envoi du numéro order
-  .then((orderld => product.json())
-  .then((orderld) => {
-    console.log(orderld);  
-} */
-
 function main() {
   let panier = JSON.parse(localStorage.getItem("cart"));
   displayProduct(panier);

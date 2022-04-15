@@ -1,4 +1,3 @@
-function transfertNumberOrder () {
-    var carthtml = location.confirmation.html;
-    location.replace('http://127.0.0.1:5500/front/html/confirmation.html' + initialPage);
-  }
+const params = (new URL(document.location)).searchParams; //permet d'accéder aux paramètres contenu dans l'URL
+const orderId = params.get("orderId"); // récupération de l'orderId
+document.getElementById("orderId").textContent = orderId; //affichage de l'orderId
