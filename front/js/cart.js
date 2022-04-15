@@ -167,7 +167,6 @@ function listenOrder() {
     };
     fetch("http://localhost:3000/api/products/order", options) // Envoie de la requête
       .then(function (res) {
-        console.log();
         return res.json(); 
       })
       .then(function(resData) {
