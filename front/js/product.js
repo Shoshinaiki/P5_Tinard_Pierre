@@ -8,7 +8,6 @@ const id = search_params.get("id");
 fetch(`http://localhost:3000/api/products/${id}`)
   .then((product) => product.json())
   .then((product) => {
-    console.log(product);
     // affichage des couleurs
     const select = document.getElementById("colors");
     for (color of product.colors) {

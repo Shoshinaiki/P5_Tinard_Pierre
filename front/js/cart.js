@@ -115,25 +115,92 @@ function listenDelete() {
 
 function listenQuantity() {
   /* fonction écoute de quantitée */
-  let quantityArray = document.querySelectorAll("input.itemQuantity");
-  quantityArray.forEach(function (elm) {
-    /* vérifier les éléments au click du bouton */ elm.addEventListener(
+  let quantityArray = document.querySelectorAll("input.itemQuantity"); //tu cibles tous input de quantité (ça te donne un tableau)
+  quantityArray.forEach(function (elm) { //tu fais une boucle sur le tableau (pour chaque input du tableau des input de quantité)
+    /* vérifier les éléments au click du bouton */ elm.addEventListener(  //tu écoutes le changement de l'input (ATTENTION ce n'est pas au click)
       "input",
       function (e) {
-        let panier = JSON.parse(localStorage.getItem("cart"));
-        let articleId = elm.closest("article").getAttribute("data-id");
-        let articleColor = elm.closest("article").getAttribute("data-color");
-        let index = panier.findIndex(
+        let panier = JSON.parse(localStorage.getItem("cart"));  //tu récupères ton panier du localStorage
+        let articleId = elm.closest("article").getAttribute("data-id"); //tu cibles l'article le plus près de l'élément cliqué et tu prends l'id via ses attributs
+        let articleColor = elm.closest("article").getAttribute("data-color");  //tu cibles l'article le plus près de l'élément cliqué et tu prends la couleur via ses attributs
+        let index = panier.findIndex(   //tu cherches la position de l'élément identique dans le panier
           (produit) =>
             produit.id === articleId && produit.color === articleColor
         );
-        panier[index].quantity = parseInt(e.target.value);
-        localStorage.setItem("cart", JSON.stringify(panier));
-        displayQuantityAndPrice(panier);
+        if(e.target.value <= 0) { //si la quantité saisie est inférieure ou égale à 0
+          e.target.value = panier[index].quantity; //la valeur de l'input garde la quantité de l'article mis dans le panier du local storage
+          return window.alert("la quantité ne peut être inférieur à 1, cliquez sur supprimer si vous voulez le retirer du panier."); //une alerte précise la directive au client
+        } else { //sinon 
+          panier[index].quantity = parseInt(e.target.value); //tu dis que la nouvelle quantité est égale à la qté saisie dans l'input  
+          localStorage.setItem("cart", JSON.stringify(panier)); //tu renvois le panier modifié
+        };
+        displayQuantityAndPrice(panier); //tu exécutes la fonction pour recalculer les totaux prix et qté
       }
     );
   });
 }
+
+//création de 3 constantes pour définir les Regex
+const alphaRegex        = /^[a-zA-Zçñàéèêëïîôüù][a-zA-Zçñàéèêëïîôüù\- '\\.]{0,25}$/;//ici la regex autorisant uniquement les caractères alphabétiques (prénom + nom + ville);
+const alphaNumberRegex  = /^[0-9a-zA-Zçñàéèêëïîôüù][0-9a-zA-Zçñàéèêëïîôüù '-\.]{2,}$/;//ici la regex autorisant uniquement les caractères alphanumériques (adresse postale);
+const emailRegex        = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/; //ici la regex autorisant uniquement le format email (email);
+
+//création de 5 constantes pour les inputs du formulaire
+const firstName     = document.getElementById("firstName"); //cible l'input prénom
+const lastName      = document.getElementById("lastName");  //cible l'input nom
+const address       = document.getElementById("address");   //cible l'input addresse
+const city          = document.getElementById("city");      //cible l'input ville
+const email         = document.getElementById("email");     //cible l'input email
+
+function checkInput() { //fonction qui va faire la vérification des inputs du formulaire lors de la saisie des infos par l'utilisateur
+  firstName.addEventListener("input", function (event) { //écoute de l'input prénom (firstName), type de l'écoute ("input"), action qui doit être faite (function) 
+    if (alphaRegex.test(event.target.value) === false) { //condition si la regex lorsqu'on la test sur la valeur de l'input qui est en train d'être modifié renvoie faux
+      document.getElementById("firstNameErrorMsg").innerText = "Merci d'entrer un prénom valide."; //alors on modifie le contenu du p d'erreur pour dire que ça n'est pas bon
+    } else { //sinon c'est que le regex renvoie vrai
+      document.getElementById("firstNameErrorMsg").innerText = ""; //alors le p d'erreur est vide (ça évite que le message d'erreur reste)
+    };
+  });
+  lastName.addEventListener("input", function (event) {
+    if (alphaRegex.test(event.target.value) == false) {
+        document.getElementById("lastNameErrorMsg").innerText = "Merci d'entrer un nom valide.";
+    } else {
+        document.getElementById("lastNameErrorMsg").innerText = "";
+    };
+  });
+  address.addEventListener("input", function (event) {
+      if (alphaNumberRegex.test(event.target.value) == false) {
+          document.getElementById("addressErrorMsg").innerText = "Merci d'entrer une adresse valide.";
+      } else {
+          document.getElementById("addressErrorMsg").innerText = "";
+      };
+  });
+  city.addEventListener("input", function (event) {
+      if (alphaRegex.test(event.target.value) == false) {
+          document.getElementById("cityErrorMsg").innerText = "Merci d'entrer une ville valide.";
+      } else {
+          document.getElementById("cityErrorMsg").innerText = "";
+      };
+  });
+  email.addEventListener("input", function (event) {
+      if (emailRegex.test(event.target.value) == false) {
+          document.getElementById("emailErrorMsg").innerText = "Merci d'entrer un e-mail valide";
+      } else {
+          document.getElementById("emailErrorMsg").innerText = "";
+      };
+  });
+};
+
+function checkForm() { //fonction qui vérifie que tous les input sont ok
+  if (alphaRegex.test(firstName.value) == true //si le prénom est bon
+      && alphaRegex.test(lastName.value) == true // et le nom est bon
+      && alphaRegex.test(city.value) == true // et la ville est bonne
+      && alphaNumberRegex.test(address.value) == true // et l'adresse
+      && emailRegex.test(email.value) == true) { //et l'email est ok
+        return true; // alors tu renvoies vrai (le formulaire est bien rempli)
+  } else { //sinon
+        return false; // tu renvoies faux (le formulaire est mal rempli)
+  };
+};
 
 function listenOrder() {
   /* fonction écoute de commande */
@@ -152,6 +219,31 @@ function listenOrder() {
     for (product of panier) {
       produit.push(product.id);
     }
+
+     /* email.addEventListener("listenOrder", function () {
+      let regex1 = Prenom chaine.match(regex);
+      let regex2 = Nom
+      let regex3 = Addresse
+      let regex4 = Ville
+      let regex5 = Email
+      validEmail(this);
+    }); */
+    
+    const validEmail = function (inputEmail) {
+      let testEmail = emailRegexp.test(inputEmail.value);
+      let emailMsg = document.getElementById("emailErrorMsg");
+    
+      if (testEmail == true) {
+        emailMsg.innerText = "Email valide";
+        emailMsg.style.color = "#3FFF00";
+        return true;
+      } else {
+        emailMsg.innerText = "Ex de mail accepté : ja_ja-5.@ka.mele.on ";
+        emailMsg.style.color = "red";
+        return false;
+      }
+    };
+
     const order = { 
       contact: contact,
       products: produit,
@@ -171,6 +263,7 @@ function listenOrder() {
       })
       .then(function(resData) {
         window.location.href = "../html/confirmation.html?orderId=" + resData.orderId;
+        localStorage.clear();
       } )
       .catch(function (err) {
         alert("Il y a eu un problème avec l'opération fetch: " + err.message);
@@ -182,6 +275,7 @@ function main() {
   let panier = JSON.parse(localStorage.getItem("cart"));
   displayProduct(panier);
   displayQuantityAndPrice(panier);
+  checkInput();
 }
 
 main();
