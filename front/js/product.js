@@ -1,13 +1,14 @@
 const url = new URL(document.location.href);
 
-const search_params = new URLSearchParams(url.search);
+const search_params = new URLSearchParams(url.search); // permet d'accéder aux paramètres contenu dans l'URL 
 
-const id = search_params.get("id");
+const id = search_params.get("id"); // récupération de l'Id  
 
 
-fetch(`http://localhost:3000/api/products/${id}`)
+fetch(`http://localhost:3000/api/products/${id}`) // appel à l'API du produit recherché
   .then((product) => product.json())
   .then((product) => {
+
     // affichage des couleurs
     const select = document.getElementById("colors");
     for (color of product.colors) {
@@ -16,12 +17,16 @@ fetch(`http://localhost:3000/api/products/${id}`)
       newoption.innerText = color;
       select.appendChild(newoption);
     }
+
     // affichage du prix
     document.getElementById("price").innerText = product.price;
+
     // affichage du nom
     document.getElementById("title").innerText = product.name;
+
     // affichage de la description
     document.getElementById("description").innerText = product.description;
+
     // affichage de l'image
     const divimg = document.querySelector(".item__img");
     const img = document.createElement("img");
@@ -29,6 +34,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
     img.setAttribute("alt", product.altTxt);
     divimg.appendChild(img);
   });
+
 // ajouter des produits dans le panier
 const addToCart = document.getElementById("addToCart");
 addToCart.addEventListener("click", function () {
@@ -41,8 +47,7 @@ addToCart.addEventListener("click", function () {
     return window.alert("veuillez indiquer une quantité de 1 à 100");
   }
   
-    
-  // recup Id du produit, sa couleur, sa quantité
+// recup Id du produit, sa couleur, sa quantité 
   let produit = {
     id: id,
     color: itemColor,

@@ -1,4 +1,4 @@
-fetch("http://localhost:3000/api/products")
+fetch("http://localhost:3000/api/products") // appel à l'API des produits
   .then(products => products.json())
   .then(products => {
     let htmlProduct = ""
@@ -12,6 +12,6 @@ fetch("http://localhost:3000/api/products")
         </article>
       </a>
 `})
-    document.getElementById("items").innerHTML = htmlProduct;
+    document.getElementById("items").innerHTML = htmlProduct; 
 
   })
