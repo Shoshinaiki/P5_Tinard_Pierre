@@ -14,7 +14,7 @@ fetch(`http://localhost:3000/api/products/${id}`) // appel à l'API du produit r
     for (color of product.colors) {
       const newoption = document.createElement("option");
       newoption.setAttribute("value", color);
-      newoption.innerText = color;
+      newoption.innerText = color; 
       select.appendChild(newoption);
     }
 
@@ -40,6 +40,7 @@ const addToCart = document.getElementById("addToCart");
 addToCart.addEventListener("click", function () {
   const itemQuantity = document.getElementById("quantity").value;
   const itemColor = document.getElementById("colors").value;
+  
   if (itemColor === "" ) {
     return window.alert("veuillez indiquer une des couleurs disponibles")
   }
@@ -72,4 +73,5 @@ addToCart.addEventListener("click", function () {
       localStorage.setItem("cart", JSON.stringify(cart));
     }
   }
-});
+  window.alert("Votre produit a été ajouté au panier");
+}); 
